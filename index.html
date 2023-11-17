@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <title>MicroDallE</title>
 </head>
+
 <body>
     <div class="container">
         <form id="image-form" class="mb-3">
@@ -27,45 +29,48 @@
             </div>
             <button type="submit" class="btn btn-primary">Generate</button>
         </form>
-        <img class="img-fluid" id="result-image" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Generated Image">
+        <img class="img-fluid" id="result-image"
+            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Generated Image">
         <div id="error">
-    </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        </div>
 
-    <script>
-    document.getElementById('image-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var prompt = document.getElementById('prompt').value;
-        var hd = document.getElementById('hd').checked ? "hd":"standard";
-        var size = document.getElementById('size').value;
-        document.getElementById('error').textContent = "";
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-        document.getElementById('result-image').src = "inprogress.gif";
+        <script>
+            document.getElementById('image-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                var prompt = document.getElementById('prompt').value;
+                var hd = document.getElementById('hd').checked ? "hd" : "standard";
+                var size = document.getElementById('size').value;
+                document.getElementById('error').textContent = "";
 
-        fetch('/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ prompt: prompt, hd: hd, size:size })
-        })
-        .then(response => {
-            if (!response.ok) {
-               throw new Error('Invalid response: ' + response.status);
-            }
-            return response.text()
-        })
-        .then(data => {
-            document.getElementById('result-image').src = data;
-        })
-        .catch((error) => {
-            document.getElementById('error').textContent = error;
-            console.error('Error:', error);
-        });
-    });
-    </script>
+                document.getElementById('result-image').src = "inprogress.gif";
+
+                fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt: prompt, hd: hd, size: size })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(content => {
+                                throw new Error('Invalid response: ' + content);
+                            })
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        document.getElementById('result-image').src = data.url;
+                    })
+                    .catch(error => {
+                        document.getElementById('error').textContent = error;
+                    });
+            });
+        </script>
 
 </body>
+
 </html>
