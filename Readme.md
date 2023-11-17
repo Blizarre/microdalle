@@ -1,6 +1,6 @@
 # MicroDallE
 
-This project is a web server that creates an image based on a user-input prompt. It is using DallE 3 (require an OpenAI account).
+This project is a web server that creates an image based on a user-input prompt. It is using DallE 3 (you will need an [OpenAI API account](https://platform.openai.com)).
 It was mostly written using ChatGPT just to see how far it would go (even this Readme!).
 
 Note: It can optionally save each image to the disk with its prompt, for safekeeping.
