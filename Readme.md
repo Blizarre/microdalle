@@ -33,3 +33,7 @@ They will be saved in /images on the docker container, and LOCAL_DIR on your fil
 ## Attribution
 
 The spinner was gracefully under a free license by https://loading.io
+
+## Screenshot
+
+![Sample UI](screenshot.jpg)
