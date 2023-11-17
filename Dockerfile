@@ -2,13 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app/
 
-ADD index.html inprogress.gif server.py requirements.txt /app/
+RUN useradd web -s /bin/false
+
+ADD requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
+ADD index.html inprogress.gif server.py  /app/
 
-RUN useradd web -s /dev/null
+EXPOSE 8000
 
 USER web
 
