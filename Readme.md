@@ -1,7 +1,7 @@
 # MicroDallE
 
 This project is a web server that creates an image based on a user-input prompt. It is using DallE 3 (require an OpenAI account).
-It was mostly written using ChatGPT just to see how far it would go.
+It was mostly written using ChatGPT just to see how far it would go (even this Readme!).
 
 Note: It can optionally save each image to the disk with its prompt, for safekeeping.
 
@@ -13,7 +13,7 @@ Note: It can optionally save each image to the disk with its prompt, for safekee
 - `requirements.txt`: Python dependencies needed for this project. Dependencies should be pinned, yes, but it's just a toy
 - `inprogress.gif`: a GIF shown in the user interface while the image is being generated.
 
-## Run Instructions
+## How to run
 
 - First, build the Docker image as follows:
 ```shell
@@ -30,10 +30,11 @@ They will be saved in /images on the docker container, and LOCAL_DIR on your fil
 - Open your web browser and visit http://localhost:8000.
 - Enter your parameters in the form and click `Generate` to generate an image.
 
-## Attribution
-
-The spinner was gracefully under a free license by https://loading.io
-
 ## Screenshot
 
 ![Sample UI](screenshot.jpg)
+
+## Attribution
+
+The spinner was gracefully provided under a free license by https://loading.io
+
