@@ -62,22 +62,44 @@
             crossorigin="anonymous"></script>
 
         <script>
+            // Controls can be collapsed or not
             if (localStorage.getItem("collapsed") === "true") {
                 $('#controls').collapse('hide')
             } else {
                 $('#controls').collapse('show')
             }
-
             $('#controls').on('hide.bs.collapse', function () {
                 window.localStorage.setItem("collapsed", "true")
             })
             $('#controls').on('show.bs.collapse', function () {
                 localStorage.setItem("collapsed", "false")
             })
+
+            // The fields' value should be stored and retrieved from the local storage
+            for (let id of ["prompt", "size", "style"]) {
+                let stored_value = localStorage.getItem(id)
+                let field = $('#' + id)
+                if (stored_value !== null) {
+                    field.val(stored_value)
+                }
+                field.on("change", function (evt) {
+                    localStorage.setItem(id, evt.target.value)
+                })
+            }
+
+            let field_hd = $("#hd")
+            if (localStorage.getItem("hd") !== null) {
+                field_hd.prop("checked", "true" === localStorage.getItem("hd"))
+            }
+            field_hd.on("change", function () {
+                localStorage.setItem("hd", field_hd.prop("checked"))
+            })
+
+            // Submission to the server
             $('#image-form').on('submit', function (event) {
                 event.preventDefault();
                 var prompt = $('#prompt').val();
-                var hd = $('#hd').checked ? "hd" : "standard";
+                var hd = $('#hd').prop("checked") ? "hd" : "standard";
                 var size = $('#size').val();
                 var style = $('#style').val();
                 $('#error').textContent = "";
@@ -101,7 +123,7 @@
                         return response.json()
                     })
                     .then(data => {
-                        $('#result-image').attr({ src: data.url });
+                        $('#result-image').prop("src", data.url);
                         $('#revised-prompt').val(data.revised_prompt);
                     })
                     .catch(error => {
