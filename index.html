@@ -76,14 +76,14 @@
             })
             $('#image-form').on('submit', function (event) {
                 event.preventDefault();
-                var prompt = $('#prompt').value;
+                var prompt = $('#prompt').val();
                 var hd = $('#hd').checked ? "hd" : "standard";
-                var size = $('#size').value;
-                var style = $('#style').value;
+                var size = $('#size').val();
+                var style = $('#style').val();
                 $('#error').textContent = "";
 
                 $('result-image').src = "inprogress.gif";
-                $('#revised-prompt').value = "...";
+                $('#revised-prompt').val("...");
 
                 fetch('/generate', {
                     method: 'POST',
@@ -101,11 +101,11 @@
                         return response.json()
                     })
                     .then(data => {
-                        document.getElementById('result-image').src = data.url;
-                        document.getElementById('revised-prompt').value = data.revised_prompt;
+                        $('#result-image').attr({ src: data.url });
+                        $('#revised-prompt').val(data.revised_prompt);
                     })
                     .catch(error => {
-                        document.getElementById('error').textContent = error;
+                        $('#error').text(error);
                     });
             });
         </script>
