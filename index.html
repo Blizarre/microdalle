@@ -16,19 +16,32 @@
                 <label for="prompt">Prompt</label>
                 <textarea class="form-control" id="prompt" rows="3"></textarea>
             </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="hd">
-                    <label class="form-check-label" for="hd">HD</label>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#controls"
+                aria-expanded="false" aria-controls="controls">
+                Toggle controls
+            </button>
+            <div class="collapse" id="controls">
+                <div class="mt-3 form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="hd">
+                        <label class="form-check-label" for="hd">HD</label>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="size">Size</label>
-                <select class="form-control" id="size">
-                    <option>1024x1024</option>
-                    <option>1024x1792</option>
-                    <option>1792x1024</option>
-                </select>
+                <div class="form-group">
+                    <label for="size">Size</label>
+                    <select class="form-control" id="size">
+                        <option>1024x1024</option>
+                        <option>1024x1792</option>
+                        <option>1792x1024</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="style">Style</label>
+                    <select class="form-control" id="style">
+                        <option>vivid</option>
+                        <option>natural</option>
+                    </select>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Generate</button>
         </form>
@@ -49,22 +62,35 @@
             crossorigin="anonymous"></script>
 
         <script>
-            document.getElementById('image-form').addEventListener('submit', function (event) {
-                event.preventDefault();
-                var prompt = document.getElementById('prompt').value;
-                var hd = document.getElementById('hd').checked ? "hd" : "standard";
-                var size = document.getElementById('size').value;
-                document.getElementById('error').textContent = "";
+            if (localStorage.getItem("collapsed") === "true") {
+                $('#controls').collapse('hide')
+            } else {
+                $('#controls').collapse('show')
+            }
 
-                document.getElementById('result-image').src = "inprogress.gif";
-                document.getElementById('revised-prompt').value = "...";
+            $('#controls').on('hide.bs.collapse', function () {
+                window.localStorage.setItem("collapsed", "true")
+            })
+            $('#controls').on('show.bs.collapse', function () {
+                localStorage.setItem("collapsed", "false")
+            })
+            $('#image-form').on('submit', function (event) {
+                event.preventDefault();
+                var prompt = $('#prompt').value;
+                var hd = $('#hd').checked ? "hd" : "standard";
+                var size = $('#size').value;
+                var style = $('#style').value;
+                $('#error').textContent = "";
+
+                $('result-image').src = "inprogress.gif";
+                $('#revised-prompt').value = "...";
 
                 fetch('/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ prompt: prompt, hd: hd, size: size })
+                    body: JSON.stringify({ prompt: prompt, hd: hd, size: size, style: style })
                 })
                     .then(response => {
                         if (!response.ok) {

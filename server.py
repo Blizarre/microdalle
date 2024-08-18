@@ -68,6 +68,7 @@ def generate():
     prompt = request.json["prompt"]
     hd = request.json["hd"]
     size = request.json["size"]
+    style = request.json["style"]
 
     log.info("Sending request to OpenAI with prompt: %s", prompt)
 
@@ -77,6 +78,7 @@ def generate():
             prompt=prompt,
             size=size,
             quality=hd,
+            style=style,
             n=1,
         )
     except OpenAIError as e:
