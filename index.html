@@ -22,10 +22,11 @@
             </button>
             <div class="collapse" id="controls">
                 <div class="mt-3 form-group">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="hd">
-                        <label class="form-check-label" for="hd">HD</label>
-                    </div>
+                    <label for="quality">Quality</label>
+                    <select class="form-control" id="quality">
+                        <option>standard</option>
+                        <option>hd</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="size">Size</label>
@@ -76,7 +77,7 @@
             })
 
             // The fields' value should be stored and retrieved from the local storage
-            for (let id of ["prompt", "size", "style"]) {
+            for (let id of ["prompt", "size", "style", "quality"]) {
                 let stored_value = localStorage.getItem(id)
                 let field = $('#' + id)
                 if (stored_value !== null) {
@@ -87,24 +88,16 @@
                 })
             }
 
-            let field_hd = $("#hd")
-            if (localStorage.getItem("hd") !== null) {
-                field_hd.prop("checked", "true" === localStorage.getItem("hd"))
-            }
-            field_hd.on("change", function () {
-                localStorage.setItem("hd", field_hd.prop("checked"))
-            })
-
             // Submission to the server
             $('#image-form').on('submit', function (event) {
                 event.preventDefault();
-                var prompt = $('#prompt').val();
-                var hd = $('#hd').prop("checked") ? "hd" : "standard";
-                var size = $('#size').val();
-                var style = $('#style').val();
-                $('#error').textContent = "";
+                let prompt = $('#prompt').val();
+                let quality = $('#quality').val();
+                let size = $('#size').val();
+                let style = $('#style').val();
+                $('#error').text("");
 
-                $('result-image').src = "inprogress.gif";
+                $('#result-image').prop("src", "inprogress.gif");
                 $('#revised-prompt').val("...");
 
                 fetch('/generate', {
@@ -112,7 +105,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ prompt: prompt, hd: hd, size: size, style: style })
+                    body: JSON.stringify({ prompt: prompt, quality: quality, size: size, style: style })
                 })
                     .then(response => {
                         if (!response.ok) {

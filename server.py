@@ -66,7 +66,7 @@ app = Flask(__name__)
 def generate():
     # Get the text from the user
     prompt = request.json["prompt"]
-    hd = request.json["hd"]
+    quality = request.json["quality"]
     size = request.json["size"]
     style = request.json["style"]
 
@@ -77,7 +77,7 @@ def generate():
             model="dall-e-3",
             prompt=prompt,
             size=size,
-            quality=hd,
+            quality=quality,
             style=style,
             n=1,
         )
